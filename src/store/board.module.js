@@ -1,9 +1,21 @@
 import BoardDataService from "@/services/BoardDataService";
 
-const initialState = [];
+let initialState = [];
 BoardDataService.getAll().orderByChild("createDate").once("value", (snap) => {
-    // snap.forEach(obj => initialState.push(obj.val()));
-    initialState.push(snap.val());
+    let _board = []
+
+    snap.forEach((obj) => {
+        let key = obj.key;
+        let data = obj.val();
+        _board.push({
+            key: key,
+            title: data.title,
+            description: data.description,
+            published: data.published,
+        });
+    });
+    console.log("_board :: ", _board);
+    initialState = _board;
 })
 
 export const board = {
@@ -13,7 +25,7 @@ export const board = {
         submitted: false,
     },
     actions: {
-        // 1. 글쓰기
+        // 1. 
         async writeBoard({ commit }, payload) {
             await BoardDataService.getLastIndexNo()
             .then((snap) => {
@@ -42,7 +54,7 @@ export const board = {
 
     },
     mutations: {
-        // 1. 글쓰기
+        // 1.
         WRITE_BOARD(state, payload) {
             state.initialState.push(payload);
             state.submitted = true;
@@ -55,7 +67,7 @@ export const board = {
     },
     getters: {
         allBoardContents: state => {
-
+            console.log("initialState :: ", state.initialState);
             return state.initialState;
         }
     }

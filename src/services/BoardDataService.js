@@ -27,6 +27,7 @@ class BoardDataService {
     return db.limitToLast(1).once('value');
   }
 
+
 }
 
 export default new BoardDataService();

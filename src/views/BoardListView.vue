@@ -42,6 +42,7 @@
 import BoardDataService from "../services/BoardDataService";
 import BoardDetails from "./BoardView";
 import $ from 'jquery';
+import { isProxy, toRaw } from 'vue'
 
 export default {
   name: "board-list",
@@ -104,12 +105,7 @@ export default {
   },
   mounted() {
     // BoardDataService.getAll().limitToFirst(10).on("value", this.onDataChange);
-    
-    console.log(JSON.parse(JSON.stringify(this.$store.state.board.initialState))[0]);
-    this.board.push(JSON.parse(JSON.stringify(this.$store.state.board.initialState))[0]);
-    // BoardDataService.getAll().orderByChild("createDate").on("value", (snapshot) => {
-      
-    // });
+    console.log("this.$store.getters['board/allBoardContents'] :: ", this.$store.getters['board/allBoardContents']);
     
   },
   beforeDestroy() {
