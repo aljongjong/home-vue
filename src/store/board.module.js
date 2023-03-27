@@ -1,7 +1,5 @@
 import BoardDataService from "@/services/BoardDataService";
 
-// let initialState = [];
-
 export const board = {
     namespaced: true,
     state: {
@@ -35,7 +33,6 @@ export const board = {
         newBoard({ commit }) {
             commit('NEW_BOARD')
         }
-
     },
     mutations: {
         // 1.

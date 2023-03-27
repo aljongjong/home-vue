@@ -84,6 +84,7 @@ export default {
         published: status,
       })
         .then(() => {
+          this.$emit("updatePublish", this.currentBoard.key, status);
           this.currentBoard.published = status;
           this.message = "The status was updated successfully!";
         })
@@ -100,6 +101,7 @@ export default {
 
       BoardDataService.update(this.currentBoard.key, data)
         .then(() => {
+          this.$emit("updateList", this.currentBoard.key, data);
           this.message = "The Board was updated successfully!";
         })
         .catch((e) => {

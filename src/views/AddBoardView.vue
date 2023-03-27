@@ -29,14 +29,14 @@
 
         <div v-else>
             <h4>게시글이 작성되었습니다.</h4>
-            <button class="btn btn-info" @click="$router.push('/board')">List</button>
+            <button class="btn btn-info" @click="newBoard, $router.push('/board')">List</button>
             <button class="btn btn-success" @click="newBoard">Add</button>
         </div>
     </div>
 </template>
 
 <script>
-// import { mapActions } from "vuex";
+import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "add-board",

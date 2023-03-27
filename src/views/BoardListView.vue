@@ -12,7 +12,7 @@
                   v-for="(b, index) in board"
                   :key="index"
                   @click="setActiveBoard(b, index)"
-                  :data-key="b.key"
+                  :data-key="b.key" 
                 >
                 {{ b.title }}
                 </li>
@@ -28,7 +28,9 @@
             <div v-if="currentBoard">
                 <board-details
                 :board="currentBoard"
-                @refreshList="refreshList"
+                @updateList="updateList"
+                @updatePublish="updatePublish"
+                @refreshList="refreshList" 
                 />
             </div>
             <div v-else>
@@ -76,6 +78,15 @@ export default {
       this.board = _board;
     },
 
+    updateList(key, data) {
+      this.board[this.board.map(e => e.key).indexOf(key)].title = data.title;
+      this.board[this.board.map(e => e.key).indexOf(key)].description = data.description;
+    },
+
+    updatePublish(key, status) {
+      this.board[this.board.map(e => e.key).indexOf(key)].published = status;
+    },
+
     refreshList(key) {
       this.currentBoard = null;
       this.currentIndex = -1;
@@ -105,24 +116,30 @@ export default {
       if ($('#boardList').innerHeight() + ($('#boardList').scrollTop()) >= $('#boardList')[0].scrollHeight) {
         console.log("next page items...");
         this.startSeq += 10; this.endSeq += 10;
+        let _board = [];
 
         this.$store.getters['board/allBoardContents'].forEach((val, idx) => {
+          
           if (idx >= this.startSeq && idx <= this.endSeq) {
-            this.board.push(val);
+            _board.push(val);
           }
-        })
-        
+        });
+        this.board.push(..._board);
       }
     },
   },
   mounted() {
     BoardDataService.getAll().limitToFirst(10).on("value", this.onDataChange);
-    
   },
   beforeDestroy() {
     BoardDataService.getAll().off("value", this.onDataChange);
   }
 };
+/**
+ * error
+ * 1. (수정완료) 컨텐츠 업데이트 또는 published 시, firebase 상에선 변경되지만, 화면 리스트나 상세에서는 변경이 안됨 (최초 불러오는 10개의 컨텐츠는 이상 없음) onDataChange와 연관?
+ * 2. 스크롤 중간에(모든 컨텐츠를 불러오기전) 컨텐츠 업데이트 후, 이어서 스크롤 시? 이상 현상
+ */
 </script>
 
 <style>
