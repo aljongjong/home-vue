@@ -110,7 +110,7 @@ export default {
     deleteBoard() {
       BoardDataService.delete(this.currentBoard.key)
         .then(() => {
-          this.$emit("refreshList");
+          this.$emit("refreshList", this.currentBoard.key);
         })
         .catch((e) => {
           console.log(e);

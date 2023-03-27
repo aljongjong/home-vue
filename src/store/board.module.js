@@ -1,27 +1,11 @@
 import BoardDataService from "@/services/BoardDataService";
 
-let initialState = [];
-BoardDataService.getAll().orderByChild("createDate").once("value", (snap) => {
-    let _board = []
-
-    snap.forEach((obj) => {
-        let key = obj.key;
-        let data = obj.val();
-        _board.push({
-            key: key,
-            title: data.title,
-            description: data.description,
-            published: data.published,
-        });
-    });
-    console.log("_board :: ", _board);
-    initialState = _board;
-})
+// let initialState = [];
 
 export const board = {
     namespaced: true,
     state: {
-        initialState,
+        initialState: [],
         submitted: false,
     },
     actions: {
@@ -67,7 +51,21 @@ export const board = {
     },
     getters: {
         allBoardContents: state => {
-            console.log("initialState :: ", state.initialState);
+            BoardDataService.getAll().orderByChild("createDate").once("value", (snap) => {
+                let _board = []
+
+                snap.forEach((obj) => {
+                    let key = obj.key;
+                    let data = obj.val();
+                    _board.push({
+                        key: key,
+                        title: data.title,
+                        description: data.description,
+                        published: data.published,
+                    });
+                });
+                state.initialState = _board;
+            })
             return state.initialState;
         }
     }

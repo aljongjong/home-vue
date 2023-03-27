@@ -12,6 +12,7 @@
                   v-for="(b, index) in board"
                   :key="index"
                   @click="setActiveBoard(b, index)"
+                  :data-key="b.key"
                 >
                 {{ b.title }}
                 </li>
@@ -42,7 +43,6 @@
 import BoardDataService from "../services/BoardDataService";
 import BoardDetails from "./BoardView";
 import $ from 'jquery';
-import { isProxy, toRaw } from 'vue'
 
 export default {
   name: "board-list",
@@ -52,6 +52,8 @@ export default {
       board: [],
       currentBoard: null,
       currentIndex: -1,
+      startSeq: 0,
+      endSeq: 9,
     };
   },
   methods: {
@@ -59,8 +61,10 @@ export default {
       let _board = [];
 
       items.forEach((item) => {
+
         let key = item.key;
         let data = item.val();
+
         _board.push({
           key: key,
           title: data.title,
@@ -72,9 +76,14 @@ export default {
       this.board = _board;
     },
 
-    refreshList() {
+    refreshList(key) {
       this.currentBoard = null;
       this.currentIndex = -1;
+      this.board.forEach((val, idx) => {
+        if (val.key === key) {
+          this.board.splice(idx, 1);
+        }
+      })
     },
 
     setActiveBoard(board, index) {
@@ -95,17 +104,19 @@ export default {
     async scrollend() {
       if ($('#boardList').innerHeight() + ($('#boardList').scrollTop()) >= $('#boardList')[0].scrollHeight) {
         console.log("next page items...");
-        BoardDataService.getAll().orderByChild("createDate").once("value", (snap) => {
-          this.board.push(snap.val());
-          console.log("snap.val()", snap.val());
+        this.startSeq += 10; this.endSeq += 10;
+
+        this.$store.getters['board/allBoardContents'].forEach((val, idx) => {
+          if (idx >= this.startSeq && idx <= this.endSeq) {
+            this.board.push(val);
+          }
         })
         
       }
     },
   },
   mounted() {
-    // BoardDataService.getAll().limitToFirst(10).on("value", this.onDataChange);
-    console.log("this.$store.getters['board/allBoardContents'] :: ", this.$store.getters['board/allBoardContents']);
+    BoardDataService.getAll().limitToFirst(10).on("value", this.onDataChange);
     
   },
   beforeDestroy() {
