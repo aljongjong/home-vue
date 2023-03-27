@@ -50,15 +50,17 @@ export const board = {
         allBoardContents: state => {
             BoardDataService.getAll().orderByChild("createDate").once("value", (snap) => {
                 let _board = []
-
                 snap.forEach((obj) => {
                     let key = obj.key;
                     let data = obj.val();
+                    let d = new Date(data.createDate);
+
                     _board.push({
                         key: key,
                         title: data.title,
                         description: data.description,
                         published: data.published,
+                        createDate: d.toLocaleDateString() + " " + d.toLocaleTimeString()
                     });
                 });
                 state.initialState = _board;

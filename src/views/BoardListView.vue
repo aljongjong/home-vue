@@ -2,28 +2,35 @@
     <div class="list row">
         <div class="col-md-6">
             <h4>Board List</h4>
+
+            <nav class="navbar navbar-light bg-light">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" @keyup="searchFilter()" v-model="search">
+              <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
+            </nav>
+            
             <ul class="list-group" id="boardList" 
                 style="max-height: 300px; overflow: scroll; -webkit-overflow-scrolling: touch;" 
                 @scroll="scrollend()"
             >
                 <li
                   class="list-group-item"
-                  :class="{ active: index == currentIndex }"
+                  :class="{ active: index == currentIndex, 'text-primary': b.published === true }"
                   v-for="(b, index) in board"
                   :key="index"
                   @click="setActiveBoard(b, index)"
-                  :data-key="b.key" 
+                  :data-key="b.key"
                 >
                 {{ b.title }}
                 </li>
             </ul>
 
-            <button class="m-3 btn btn-sm btn-danger" @click="removeAllBoard">
-                Remove All
+            <button class="m-3 btn btn-sm btn-danger float-left" @click="removeAllBoard">
+                전체 삭제
             </button>
             
-            <router-link to="/add" class="m-3 btn btn-sm btn-info">게시판 글쓰기</router-link>
+            <router-link to="/add" class="m-3 btn btn-sm btn-info float-right">글쓰기</router-link>
         </div>
+
         <div class="col-md-6">
             <div v-if="currentBoard">
                 <board-details
@@ -56,6 +63,7 @@ export default {
       currentIndex: -1,
       startSeq: 0,
       endSeq: 9,
+      search: "",
     };
   },
   methods: {
@@ -66,12 +74,14 @@ export default {
 
         let key = item.key;
         let data = item.val();
+        let d = new Date(data.createDate);
 
         _board.push({
           key: key,
           title: data.title,
           description: data.description,
           published: data.published,
+          createDate: d.toLocaleDateString() + " " + d.toLocaleTimeString()
         });
       });
 
@@ -103,13 +113,15 @@ export default {
     },
 
     removeAllBoard() {
-      BoardDataService.deleteAll()
-        .then(() => {
-          this.refreshList();
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      if (confirm("전체 삭제하시겠습니까?")) {
+        BoardDataService.deleteAll()
+          .then(() => {
+            this.refreshList();
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
     },
 
     async scrollend() {
@@ -127,6 +139,18 @@ export default {
         this.board.push(..._board);
       }
     },
+
+    searchFilter() {
+      let _board = [];
+
+      this.$store.getters['board/allBoardContents']
+          .filter(e => e.title.includes(this.search))
+          .map(el =>
+            _board.push(el)
+          );
+      this.board = [];
+      this.board.push(..._board);
+    }
   },
   mounted() {
     BoardDataService.getAll().limitToFirst(10).on("value", this.onDataChange);
@@ -142,10 +166,15 @@ export default {
  */
 </script>
 
-<style>
+<style scoped>
 .list {
   text-align: left;
   max-width: 750px;
   margin: auto;
+}
+
+.list-group-item.active {
+  background-color: #262626;
+  border-color: #262626;
 }
 </style>

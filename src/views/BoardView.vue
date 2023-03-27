@@ -3,28 +3,37 @@
         <h4>Board</h4>
         <form>
             <div class="form-group">
-                <label for="title">Title</label>
-                <input
-                type="text"
-                class="form-control"
-                id="title"
-                v-model="currentBoard.title"
+              <label for="title">Title</label>
+              <input
+              type="text"
+              class="form-control"
+              id="title"
+              v-model="currentBoard.title"
                 />
             </div>
 
             <div class="form-group">
-                <label for="description">Description</label>
-                <input
-                type="text"
-                class="form-control"
-                id="description"
-                v-model="currentBoard.description"
-                />
+              <label for="description">Description</label>
+              <textarea
+              class="form-control"
+              id="description"
+              v-model="currentBoard.description"
+              placeholder="내용을 입력하세요."
+              ></textarea>
             </div>
 
             <div class="form-group">
-                <label><strong>Status:</strong></label>
-                {{ currentBoard.published ? "Published" : "Pending" }}
+              <label for="createDate">작성일</label>
+              <p 
+              id="createDate"
+              v-text="currentBoard.createDate"
+              >
+              </p>
+            </div>
+
+            <div class="form-group">
+              <label><strong>Status:</strong></label>
+              {{ currentBoard.published ? "Published" : "Pending" }}
             </div>
         </form>
 
@@ -110,13 +119,15 @@ export default {
     },
 
     deleteBoard() {
-      BoardDataService.delete(this.currentBoard.key)
-        .then(() => {
-          this.$emit("refreshList", this.currentBoard.key);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      if (confirm("삭제하시겠습니까?")) {
+        BoardDataService.delete(this.currentBoard.key)
+          .then(() => {
+            this.$emit("refreshList", this.currentBoard.key);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
     },
   },
   mounted() {
