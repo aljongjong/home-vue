@@ -125,7 +125,7 @@ export default {
     },
 
     async scrollend() {
-      if ($('#boardList').innerHeight() + ($('#boardList').scrollTop()) >= $('#boardList')[0].scrollHeight) {
+      if (($('#boardList').innerHeight() + ($('#boardList').scrollTop()) >= $('#boardList')[0].scrollHeight) && (this.search == "")) {
         console.log("next page items...");
         this.startSeq += 10; this.endSeq += 10;
         let _board = [];

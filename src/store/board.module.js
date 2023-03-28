@@ -38,7 +38,7 @@ export const board = {
         // 1.
         WRITE_BOARD(state, payload) {
             state.initialState.push(payload);
-            state.submitted = true;
+            state.submitted = false;
         },
 
         // 2.
