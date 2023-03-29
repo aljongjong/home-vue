@@ -22,4 +22,5 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
-# home-vue
+
+installed libraries : axios, bootstrap@4.6.0, jquery, popper.js, vue-router@4, firebase@8.10.0
