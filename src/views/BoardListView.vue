@@ -5,7 +5,6 @@
 
             <nav class="navbar navbar-light bg-light">
               <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" @keyup="searchFilter()" v-model="search">
-              <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
             </nav>
             
             <ul class="list-group" id="boardList" 
@@ -20,7 +19,11 @@
                   @click="setActiveBoard(b, index)"
                   :data-key="b.key"
                 >
-                {{ b.title }}
+                  <!-- <span v-for="(word, index) in words(b.title)" :key="index">
+                    <span v-if="isSearch(word)" style="color:red;">{{ word }}</span>
+                    <span v-else>{{ word }}</span>
+                  </span> -->
+                  {{ b.title }}
                 </li>
             </ul>
 
@@ -126,17 +129,16 @@ export default {
 
     async scrollend() {
       if (($('#boardList').innerHeight() + ($('#boardList').scrollTop()) >= $('#boardList')[0].scrollHeight) && (this.search == "")) {
-        console.log("next page items...");
-        this.startSeq += 10; this.endSeq += 10;
-        let _board = [];
 
-        this.$store.getters['board/allBoardContents'].forEach((val, idx) => {
-          
-          if (idx >= this.startSeq && idx <= this.endSeq) {
-            _board.push(val);
-          }
-        });
-        this.board.push(..._board);
+        if (this.endSeq < this.$store.getters['board/allBoardContents'].length) {
+          this.startSeq += 10; this.endSeq += 10;
+          let _board = [];
+  
+          this.$store.getters['board/allBoardContents'].forEach((val, idx) => {
+            if (idx >= this.startSeq && idx <= this.endSeq) _board.push(val);
+          });
+          this.board.push(..._board);
+        }
       }
     },
 
@@ -150,7 +152,17 @@ export default {
           );
       this.board = [];
       this.board.push(..._board);
-    }
+    },
+
+    // words(string) {
+    //   return string.split(/\s+/);
+    // },
+
+    // isSearch(string) {
+    //   return `/${string}/i`.test(string);
+    // },
+
+    
   },
   mounted() {
     BoardDataService.getAll().limitToFirst(10).on("value", this.onDataChange);
