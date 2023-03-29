@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import BoardDataService from "../services/BoardDataService";
+import BoardDataService from "../../services/BoardDataService";
 
 export default {
   name: "board",

@@ -1,4 +1,5 @@
 import BoardDataService from "@/services/BoardDataService";
+import router from "@/router";
 
 export const board = {
     namespaced: true,
@@ -39,6 +40,7 @@ export const board = {
         WRITE_BOARD(state, payload) {
             state.initialState.push(payload);
             state.submitted = false;
+            router.push('/board')
         },
 
         // 2.

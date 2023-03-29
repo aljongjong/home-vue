@@ -4,23 +4,23 @@
             <div class="form-group">
                 <label for="title">Title</label>
                 <input
-                type="text"
-                class="form-control"
-                id="title"
-                required
-                v-model="board.title"
-                name="title"
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  required
+                  v-model="board.title"
+                  name="title"
                 />
             </div>
 
             <div class="form-group">
                 <label for="description">Description</label>
                 <textarea
-                class="form-control"
-                id="description"
-                required
-                v-model="board.description"
-                name="description"
+                  class="form-control"
+                  id="description"
+                  required
+                  v-model="board.description"
+                  name="description"
                 ></textarea>
             </div>
 

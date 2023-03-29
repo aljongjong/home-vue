@@ -10,12 +10,12 @@ const routes = [
     {
         path: "/board",
         name: "board",
-        component: () => import("./views/BoardListView"),
+        component: () => import("./views/board/BoardListView"),
     },
     {
         path: "/add",
         name: "add",
-        component: () => import("./views/AddBoardView")
+        component: () => import("./views/board/AddBoardView")
     }
 ];
 

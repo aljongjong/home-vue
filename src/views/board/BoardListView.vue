@@ -6,7 +6,10 @@
             <nav class="navbar navbar-light bg-light">
               <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" @keyup="searchFilter()" v-model="search">
             </nav>
+            <VDatePicker v-model="searchDate" @click="searchFilter()" expanded />
             
+            <br><br>
+
             <ul class="list-group" id="boardList" 
                 style="max-height: 300px; overflow: scroll; -webkit-overflow-scrolling: touch;" 
                 @scroll="scrollend()"
@@ -52,7 +55,7 @@
 </template>
 
 <script>
-import BoardDataService from "../services/BoardDataService";
+import BoardDataService from "../../services/BoardDataService";
 import BoardDetails from "./BoardView";
 import $ from 'jquery';
 
@@ -67,6 +70,7 @@ export default {
       startSeq: 0,
       endSeq: 9,
       search: "",
+      searchDate: "",
     };
   },
   methods: {
@@ -147,8 +151,17 @@ export default {
 
       this.$store.getters['board/allBoardContents']
           .filter(e => e.title.includes(this.search))
-          .map(el =>
-            _board.push(el)
+          .map(el => {
+            if (this.searchDate != "" && this.searchDate != null) {
+              let d = new Date(this.searchDate);
+              
+              if (d.toLocaleDateString() == el.createDate.substr(0, el.createDate.lastIndexOf(".")+1)) {
+                _board.push(el);
+              }
+            } else {
+              _board.push(el);
+            }
+          }
           );
       this.board = [];
       this.board.push(..._board);
@@ -161,7 +174,6 @@ export default {
     // isSearch(string) {
     //   return `/${string}/i`.test(string);
     // },
-
     
   },
   mounted() {
