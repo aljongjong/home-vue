@@ -1,12 +1,19 @@
 <template>
     <div class="list row">
         <div class="col-md-6">
-            <h4>Board List</h4>
+            <h2>Board List</h2>
 
             <nav class="navbar navbar-light bg-light">
               <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" @keyup="searchFilter()" v-model="search">
             </nav>
-            <VDatePicker v-model="searchDate" @click="searchFilter()" expanded />
+
+            <VDatePicker 
+              v-model="searchDate" 
+              @click="searchFilter()" 
+              title-position="left"
+              expanded 
+              :attributes="attributes" 
+            />
             
             <br><br>
 
@@ -40,10 +47,10 @@
         <div class="col-md-6">
             <div v-if="currentBoard">
                 <board-details
-                :board="currentBoard"
-                @updateList="updateList"
-                @updatePublish="updatePublish"
-                @refreshList="refreshList" 
+                  :board="currentBoard"
+                  @updateList="updateList"
+                  @updatePublish="updatePublish"
+                  @refreshList="refreshList" 
                 />
             </div>
             <div v-else>
@@ -71,7 +78,26 @@ export default {
       endSeq: 9,
       search: "",
       searchDate: "",
+      attributes: [
+        {
+          // key: Any,
+          // content: 'red',
+          // highlight: true,
+          dot: {
+            color: 'red',
+          },
+          // bar: true,
+          popover: {
+            label: '히히 못지나가~',
+          },
+          // customData: {  },
+          dates: new Date("2023-03-28"),
+          // order: 0
+        }
+      ],
     };
+  },
+  computed: {
   },
   methods: {
     onDataChange(items) {
@@ -154,7 +180,7 @@ export default {
           .map(el => {
             if (this.searchDate != "" && this.searchDate != null) {
               let d = new Date(this.searchDate);
-              
+
               if (d.toLocaleDateString() == el.createDate.substr(0, el.createDate.lastIndexOf(".")+1)) {
                 _board.push(el);
               }
