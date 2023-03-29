@@ -24,4 +24,4 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### installed libraries 
-axios, bootstrap@4.6.0, jquery, popper.js, vue-router@4, firebase@8.10.0
+axios, bootstrap@4.6.0, jquery, popper.js, vue-router@4, firebase@8.10.0, v-calendar@next, @popperjs/core
