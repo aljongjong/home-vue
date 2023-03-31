@@ -78,7 +78,15 @@ export default {
       endSeq: 9,
       search: "",
       searchDate: "",
-      attributes: [],
+      attributes: [
+        {
+            key: 'today',
+            highlight: {
+              fillMode: 'outline'
+            },
+            dates: new Date(),
+        }
+      ],
       onCalendar: false,
     };
   },
@@ -228,7 +236,7 @@ export default {
  */
 </script>
 
-<style scoped>
+<style>
 .list {
   text-align: left;
   max-width: 750px;
@@ -238,5 +246,15 @@ export default {
 .list-group-item.active {
   background-color: #262626;
   border-color: #262626;
+}
+
+.vc-dot:nth-child(n+4) {
+  display: none;
+}
+
+.vc-dot:nth-child(4) {
+  display: block;
+  background-image: url(https://png.pngtree.com/png-vector/20190214/ourmid/pngtree-vector-plus-icon-png-image_515260.jpg);
+  background-size: cover;
 }
 </style>
