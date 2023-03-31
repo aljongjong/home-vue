@@ -9,8 +9,8 @@
 
             <VDatePicker 
               v-model="searchDate" 
-              @click="searchFilter()" 
-              title-position="left"
+              @click="searchFilter(); onCalendar = !onCalendar;" 
+              title-position="left" 
               expanded 
               :attributes="attributes" 
             />
@@ -78,26 +78,14 @@ export default {
       endSeq: 9,
       search: "",
       searchDate: "",
-      attributes: [
-        {
-          // key: Any,
-          // content: 'red',
-          // highlight: true,
-          dot: {
-            color: 'red',
-          },
-          // bar: true,
-          popover: {
-            label: '히히 못지나가~',
-          },
-          // customData: {  },
-          dates: new Date("2023-03-28"),
-          // order: 0
-        }
-      ],
+      attributes: [],
+      onCalendar: false,
     };
   },
   computed: {
+    updateCalendar: (addEvent) => {
+      this.attributes.push
+    }
   },
   methods: {
     onDataChange(items) {
@@ -158,7 +146,7 @@ export default {
     },
 
     async scrollend() {
-      if (($('#boardList').innerHeight() + ($('#boardList').scrollTop()) >= $('#boardList')[0].scrollHeight) && (this.search == "")) {
+      if (($('#boardList').innerHeight() + ($('#boardList').scrollTop()) >= $('#boardList')[0].scrollHeight) && (this.search == "") && (this.onCalendar == false)) {
 
         if (this.endSeq < this.$store.getters['board/allBoardContents'].length) {
           this.startSeq += 10; this.endSeq += 10;
@@ -182,7 +170,7 @@ export default {
               let d = new Date(this.searchDate);
 
               if (d.toLocaleDateString() == el.createDate.substr(0, el.createDate.lastIndexOf(".")+1)) {
-                _board.push(el);
+                _board.push(el); 
               }
             } else {
               _board.push(el);
@@ -204,6 +192,30 @@ export default {
   },
   mounted() {
     BoardDataService.getAll().limitToFirst(10).on("value", this.onDataChange);
+    BoardDataService.getAll().once("value", (snap) => {
+      snap.forEach((obj) => {
+        let attribute = {
+            key: '',
+            dot: {
+              color: '',
+            },
+            popover: {
+              label: '',
+            },
+            dates: '',
+        };
+        let key = obj.key;
+        let data = obj.val();
+        let d = new Date(data.createDate);
+
+        attribute.key = key;
+        attribute.popover.label = data.title;
+        attribute.dates = d.toLocaleDateString();
+        attribute.dot.color = data.published ? 'blue' : 'red';
+
+        this.attributes.push(attribute);
+      })
+    })
   },
   beforeDestroy() {
     BoardDataService.getAll().off("value", this.onDataChange);
