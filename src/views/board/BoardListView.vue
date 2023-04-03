@@ -120,10 +120,12 @@ export default {
     updateList(key, data) {
       this.board[this.board.map(e => e.key).indexOf(key)].title = data.title;
       this.board[this.board.map(e => e.key).indexOf(key)].description = data.description;
+      this.attributes[this.attributes.map(e => e.key).indexOf(key)].popover.label = data.title;
     },
 
     updatePublish(key, status) {
       this.board[this.board.map(e => e.key).indexOf(key)].published = status;
+      this.attributes[this.attributes.map(e => e.key).indexOf(key)].dot.color = status ? 'blue' : 'red';
     },
 
     refreshList(key) {

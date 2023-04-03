@@ -1,5 +1,4 @@
 import api from "./api";
-import axios from "axios";
 
 class WeatherService {
     init(paramObj) {
@@ -12,7 +11,7 @@ class WeatherService {
     }
 
     initTest() {
-        return axios.get("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst", {
+        return api.get("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst", {
             params: {
                 serviceKey: "l2ovK%2BTcDK47hKakRh5j7Yl%2BsyoSHp2mEmfOzoF2BS5ET%2BUxnVJpblVMuHM7MZNAkNlRuTv2zI2nMJsgCsYssw%3D%3D",
                 pageNo: '1',
@@ -23,7 +22,11 @@ class WeatherService {
                 nx: '61',
                 ny: '121'
             }
-        })
+        });
+    }
+
+    test() {
+
     }
 }
 
