@@ -256,7 +256,9 @@ export default {
 
 .vc-dot:nth-child(4) {
   display: block;
-  background-image: url(https://png.pngtree.com/png-vector/20190214/ourmid/pngtree-vector-plus-icon-png-image_515260.jpg);
-  background-size: cover;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAY1BMVEX///8AAADi4uLW1tbJycmqqqq+vr7w8PCbm5vb29vq6urm5uY/Pz+2trbNzc3t7e2GhoZ8fHyUlJShoaE4ODgWFhZKSkq3t7dVVVVpaWkfHx8uLi6Ojo7ExMRzc3NjY2MjIyNMTCWfAAAB3ElEQVR4nO3cy3KCQBBGYQcjiHhBo/ESjb7/U2YRk1JmERYz3fXj+fZU9SksEapxNAIAAAAAAAAAAAAAAAAAAAAAAAAAAPA2Lhfl2HuIjCbhx7v3IJnMtuHXtvEeJocqPNjNvMfJ4OOxMMy9x0lvH54tvAdK7tApHNxJXIWulfdIiTVR4dAui+Oo8M17pMQo1EehPgr1UaiPQn0U6qNQH4X6KNRHoT4K9VGoj0J9FOqjUB+F+ijUR6G+uHDpPVJfVdFHU0aFi6bXkZVv3vIYDZ7e0e/zXHU3uXI5OO1PrXZGgSGcfPZRt/9PlsynR+DGMDCEs31gdTItDPaFS9vAcDEvnBoXTs0LW+PCtXmh7RdNCBvzwu5mem72m+8z40KHFzS+TAOv9oHGJ9HlZ9vFMLD0CLS86Ntf7u+q9maQd2s974Krupz0co4Gb/sdWNbOd/l91VGhzHOanl7xWRuFaijUR6E+CvVRqI9CfRTqo1Afhfoo1EehPgr1UaiPQn0U6qNQH4X6KNRXRIVD28WI/6G18B4ptXkn8OQ9UHLdvXD7nd/sOm/YeI+TwfMmo9u2YU6P+6h772HyKK73vsPgvkf/FNP1cT2tvccAAAAAAAAAAAAAAAAAAADAq/oG5UgXn9Zc8RoAAAAASUVORK5CYII=);
+  /* background-size: cover; */
+  background-size: 200%;
+  background-position: center;
 }
 </style>
