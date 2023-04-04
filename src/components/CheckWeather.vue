@@ -33,6 +33,7 @@ export default {
 
         WeatherService.initTest()
         .then((response) => {
+            console.log(response.data);
             this.weather = response.data;
         });
     },
