@@ -2,6 +2,22 @@
     <div>
         날씨 API
         <br>
+        <!-- <h3>{{ weather.city.name }} 날씨</h3>
+        <h4>일출시간 : {{ weather.city.sunrise }}</h4>
+        <h4>일몰시간 : {{ weather.city.sunset }}</h4> -->
+        <table border=1 style="width:100%;">
+            <tr>
+                <td>날짜</td>
+            </tr>
+            <tr>
+                <td>시간별 온도</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+            </tr>
+        </table>
         {{ weather }}
     </div>
 </template>
@@ -16,7 +32,7 @@ export default {
             weather: "",
         }
     },
-    beforeMount() {
+    mounted() {
         // WeatherService.init({
         //     serviceKey: "l2ovK%2BTcDK47hKakRh5j7Yl%2BsyoSHp2mEmfOzoF2BS5ET%2BUxnVJpblVMuHM7MZNAkNlRuTv2zI2nMJsgCsYssw%3D%3D",
         //     pageNo: '1',
