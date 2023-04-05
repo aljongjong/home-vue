@@ -3,11 +3,11 @@ import router from "@/router";
 
 export const board = {
     namespaced: true,
-    state: {
+    state: { // data
         initialState: [],
         submitted: false,
     },
-    actions: {
+    actions: { // business logic
         // 1. 
         async writeBoard({ commit }, payload) {
             await BoardDataService.getLastIndexNo()
@@ -35,7 +35,7 @@ export const board = {
             commit('NEW_BOARD')
         }
     },
-    mutations: {
+    mutations: { // state 상태 직접 변환
         // 1.
         WRITE_BOARD(state, payload) {
             state.initialState.push(payload);
@@ -48,7 +48,7 @@ export const board = {
             state.submitted = false;
         }
     },
-    getters: {
+    getters: { // computed 역할
         allBoardContents: state => {
             BoardDataService.getAll().orderByChild("createDate").once("value", (snap) => {
                 let _board = [];

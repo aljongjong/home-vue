@@ -1,24 +1,51 @@
 <template>
     <div>
-        날씨 API
         <br>
-        <!-- <h3>{{ weather.city.name }} 날씨</h3>
-        <h4>일출시간 : {{ weather.city.sunrise }}</h4>
-        <h4>일몰시간 : {{ weather.city.sunset }}</h4> -->
-        <table border=1 style="width:100%;">
+        <h3>{{ weather.city.name }}</h3>
+        <!-- <table border=1 style="width:100%;">
             <tr>
-                <td>날짜</td>
+                <th class='backslash' style='width:60px'><div>날짜</div>시간</th>
+                <td>2023. 04. 05</td>
+                <td>2023. 04. 06</td>
+                <td>2023. 04. 07</td>
+                <td>2023. 04. 08</td>
+                <td>2023. 04. 09</td>
             </tr>
             <tr>
-                <td>시간별 온도</td>
+                <td>03:00</td>
+                <td>
+                </td>
             </tr>
             <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
+                <td>06:00</td>
             </tr>
-        </table>
-        {{ weather }}
+            <tr>
+                <td>09:00</td>
+            </tr>
+            <tr>
+                <td>12:00</td>
+            </tr>
+            <tr>
+                <td>15:00</td>
+            </tr>
+            <tr>
+                <td>18:00</td>
+            </tr>
+            <tr>
+                <td>21:00</td>
+            </tr>
+            <tr>
+                <td>24:00</td>
+            </tr>
+        </table> -->
+
+        <div v-for="(list, index) in weather.list" :key="index">
+            <span v-for="(obj, idx) in list" :key="idx">
+                <span v-if="obj.dt_txt">{{ obj.dt_txt }}</span> :: {{ obj.main.temp }} <br>
+            </span>
+        </div>
+
+
     </div>
 </template>
 
@@ -29,29 +56,43 @@ export default {
     name: "check-weather",
     data() {
         return {
-            weather: "",
+            weather: {
+                cod: "",
+                message: "",
+                list: [],
+                city: {}
+            },
         }
     },
     mounted() {
-        // WeatherService.init({
-        //     serviceKey: "l2ovK%2BTcDK47hKakRh5j7Yl%2BsyoSHp2mEmfOzoF2BS5ET%2BUxnVJpblVMuHM7MZNAkNlRuTv2zI2nMJsgCsYssw%3D%3D",
-        //     pageNo: '1',
-        //     numOfRows: '1000',
-        //     dataType: 'json',
-        //     base_date: '20230320',
-        //     base_time: '1200',
-        //     nx: '61',
-        //     ny: '121'
-        // })
-        // .then((response) => {
-        //     console.log("날씨 데이터 ::: ", response);
-        // })
-
         WeatherService.initTest()
         .then((response) => {
             console.log(response.data);
-            this.weather = response.data;
-        });
+            this.weather.cod = response.data.cod;
+            this.weather.message = response.data.message;
+            this.weather.list.push(response.data.list);
+            this.weather.city = response.data.city;
+        })
     },
 }
 </script>
+
+<style scoped>
+.slash {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="100%" x2="100%" y2="0" stroke="gray" /></svg>');
+}
+.backslash {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="0" x2="100%" y2="100%" stroke="gray" /></svg>');
+}
+.slash, .backslash { text-align: left; }
+.slash div, .backslash div { text-align: right; }
+table {
+	border-collapse: collapse;
+	border: 1px solid gray;
+}  
+th, td {
+	border: 1px solid gray;
+	padding: 5px;
+	text-align: center;
+}
+</style>

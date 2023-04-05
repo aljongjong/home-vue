@@ -1,6 +1,5 @@
 <template>
     <div>
-        HOME
         <check-weather/>
     </div>
 </template>
