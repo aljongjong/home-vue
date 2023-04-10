@@ -4,30 +4,32 @@
         <h3>{{ weather.city.name }}</h3>
 
         <div>
-            <h2>주간예보</h2>
+            <h5 style="font-weight: bolder;">주간예보</h5>
             <div>
                 <ul class="week_list">
-                    <li class="week_item">
+                    <li class="week_item" v-for="(w, index) in week" :key="index">
                         <div class="day_data">
                             <div class="cell_date">
                                 <span class="date_inner">
-                                    <strong class="day">{{ day }}</strong>
-                                    <span class="date">{{ date }}</span>
+                                    <strong class="day">{{ getDay(w.date) }}</strong>
+                                    <span class="date">{{ w.date.substr(5) }}</span>
                                 </span>
                             </div>
                             <div class="cell_weather">
-                                <span class="weather_inner" data-wetr-cd="22" data-wetr-txt="흐리고 한때 비">
+                                <!-- 오전 09:00 기준 -->
+                                <span class="weather_inner" data-wetr-cd="22" :data-wetr-txt="w.am.description ? w.am.description : ''">
                                     <strong class="inner_text left">
                                         <span class="timeslot">오전</span>
-                                        <span class="rainfall "><span class="blind">강수확률</span>60%</span>
+                                        <span class="rainfall "><span class="blind">강수확률</span>{{ w.am.pop }}%</span>
                                     </strong>
-                                    <i class="ico _cnLazy ico_wt22" data-ico="ico_wt22"><span class="blind">흐리고 한때 비</span></i>
+                                    <i class="ico _cnLazy ico_wt22" :data-ico="w.icon"><span class="blind">{{ w.am.weather }}</span></i>
                                 </span>
-                                <span class="weather_inner" data-wetr-cd="22" data-wetr-txt="구름많고 한때 비">
-                                    <i class="ico _cnLazy ico_wt22" data-ico="ico_wt22"><span class="blind">구름많고 한때 비</span></i>
+                                <!-- 오후 18:00 기준 -->
+                                <span class="weather_inner" data-wetr-cd="22" :data-wetr-txt="w.pm.description">
+                                    <i class="ico _cnLazy ico_wt22" :data-ico="w.icon"><span class="blind">{{ w.pm.weather }}</span></i>
                                     <strong class="inner_text">
                                         <span class="timeslot">오후</span>
-                                        <span class="rainfall "><span class="blind">강수확률</span>60%</span>
+                                        <span class="rainfall "><span class="blind">강수확률</span>{{ w.pm.pop }}%</span>
                                     </strong>
                                 </span>
                             </div>
@@ -35,11 +37,11 @@
                                 <span class="temperature_inner">
                                     <strong class="temperature">
                                         <span class="lowest">
-                                            <span class="blind">{{ lowest_temperature }}</span>
+                                            <span class="blind">{{ w.temp_min }}°</span>
                                         </span>
                                         <span class="bar">/</span>
                                         <span class="highest">
-                                            <span class="blind">{{ highest_temperature }}</span>
+                                            <span class="blind">{{ w.temp_max }}°</span>
                                         </span>
                                     </strong>
                                 </span>
@@ -122,17 +124,12 @@
                 </tr>
             </tbody>
         </table>
-
-        <!-- <div v-for="(list, index) in weather.list" :key="index">
-            <span v-for="(obj, idx) in list" :key="idx">
-                <span v-if="obj.dt_txt">{{ obj.dt_txt }}</span> :: {{ obj.main.temp }} <br>
-            </span>
-        </div> -->
     </div>
 </template>
 
 <script>
 import WeatherService from '@/services/weather.service'
+import { lastIndexOf } from 'lodash';
 
 export default {
     name: "check-weather",
@@ -145,9 +142,13 @@ export default {
                 city: {}
             },
             initDate: new Set(),
-            week: {
-                list: []
-            }
+            week: [],
+        }
+    },
+    methods: {
+        getDay(date) {
+            const week = ['일', '월', '화', '수', '목', '금', '토'];
+            return week[new Date(date).getDay()]
         }
     },
     mounted() {
@@ -168,23 +169,47 @@ export default {
         WeatherService.initTest()
         .then((response) => {
             // 날짜 비교해서 weekly 날짜 객체 만들고, 같은 날짜일때 해당 날짜 객체에 아래 데이터들 넣기
-            // 요일, 날짜 / 오전(날씨, 최저온도, 강수확률) / 오후(날씨, 최고온도, 강수확률)
+            // 요일, 날짜 / 오전(날씨, 강수확률) / 오후(날씨, 강수확률) / 최저온도, 최고온도
             let date = "";
-            response.data.list.forEach((obj) => {
+            let index = 0;
+            response.data.list.forEach((obj, idx) => {
                 if (date !== new Date(obj.dt * 1000).toLocaleDateString("ko-KR")) {
                     date = new Date(obj.dt * 1000).toLocaleDateString("ko-KR");
-                    console.log("date", date, new Date(obj.dt * 1000).toLocaleTimeString("ko-KR"));
-                    console.log("d", new Date(obj.dt * 1000).toLocaleString("ko-KR"));
                     
-                    this.week.list.push(date);
+                    let o = new Object();
+                    o.date = date;
+                    o.temp_min = obj.main.temp_min;                 // 최저기온
+                    o.temp_max = obj.main.temp_max;                 // 최고기온
+                    o.humidity = obj.main.humidity;                 // 습도
+                    
+                    this.week.push(o);
+                    index++;
                 } else {
-                    console.log("time", new Date(obj.dt * 1000).toLocaleTimeString("ko-KR"));
+                    this.week[index-1].temp_min = obj.main.temp_min < this.week[index-1].temp_min ? obj.main.temp_min : this.week[index-1].temp_min;
+                    this.week[index-1].temp_max = obj.main.temp_max > this.week[index-1].temp_max ? obj.main.temp_max : this.week[index-1].temp_max;
+
+                    if (new Date(obj.dt * 1000).getHours() === 9) {
+                        // 오전 09:00 날씨, 강수확률 pop
+                        let amo = new Object();
+                        amo.weather = obj.weather[0].main;                // 날씨
+                        amo.description = obj.weather[0].description;     // 날씨상세
+                        amo.icon = obj.weather[0].icon;                   // 아이콘 코드
+                        amo.pop = obj.pop;                                // 강수확률
+                        this.week[index-1].am = amo;
+
+                    } else if (new Date(obj.dt * 1000).getHours() === 18) {
+                        // 오후 18:00 날씨, 강수확률 pop
+                        let pmo = new Object();
+                        pmo.weather = obj.weather[0].main;                // 날씨
+                        pmo.description = obj.weather[0].description;     // 날씨상세
+                        pmo.icon = obj.weather[0].icon;                   // 아이콘 코드
+                        pmo.pop = obj.pop;                                // 강수확률
+                        this.week[index-1].pm = pmo;
+                    }
+
                 }
-                
             })
-            console.log(this.week);
-            var s = new Date(1681074000 * 1000).toLocaleTimeString("ko-KR"); // '오전 6:00:00'
-            var d = new Date(1681074000 * 1000).toLocaleDateString("ko-KR"); // '2023. 4. 10.'
+            console.log("this.week :: ", this.week);
         })
     },
 }
