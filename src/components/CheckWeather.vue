@@ -181,6 +181,22 @@ export default {
                     o.temp_min = obj.main.temp_min;                 // 최저기온
                     o.temp_max = obj.main.temp_max;                 // 최고기온
                     o.humidity = obj.main.humidity;                 // 습도
+
+                    /// am, pm이 없는 첫번째날, 마지막날 임시방편
+                    let amo = new Object();
+                    amo.weather = obj.weather[0].main;                // 날씨
+                    amo.description = obj.weather[0].description;     // 날씨상세
+                    amo.icon = obj.weather[0].icon;                   // 아이콘 코드
+                    amo.pop = obj.pop;                                // 강수확률
+                    o.am = amo;
+
+                    let pmo = new Object();
+                    pmo.weather = obj.weather[0].main;                // 날씨
+                    pmo.description = obj.weather[0].description;     // 날씨상세
+                    pmo.icon = obj.weather[0].icon;                   // 아이콘 코드
+                    pmo.pop = obj.pop;                                // 강수확률
+                    o.pm = pmo;
+                    ///
                     
                     this.week.push(o);
                     index++;
